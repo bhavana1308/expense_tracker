@@ -32,4 +32,28 @@ public class ExpenseControllerApi {
             return null;
         }
     }
+
+    @GetMapping("/edit/{expenseId}")
+    public Object getExpenseDetailsForEditing(
+            @PathVariable Long expenseId,
+            @RequestParam Long id) {
+
+        Optional<Expense> optionalExpense = expenseRepository.findById(expenseId);
+
+        if (optionalExpense.isPresent()) {
+            Expense expense = optionalExpense.get();
+
+
+            if (expense.getUser().getId().equals(id)) {
+
+                return expense;
+            } else {
+
+                return "user not found";
+            }
+        } else {
+
+            return "Expense not found";
+        }
+    }
 }
