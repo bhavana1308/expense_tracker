@@ -8,6 +8,7 @@ import org.launchcode.expense_tracker.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.Optional;
 
 @RestController
@@ -37,7 +38,6 @@ public class ExpenseControllerApi {
     public Object getExpenseDetailsForEditing(
             @PathVariable Long expenseId,
             @RequestParam Long id) {
-
         Optional<Expense> optionalExpense = expenseRepository.findById(expenseId);
 
         if (optionalExpense.isPresent()) {
@@ -56,4 +56,50 @@ public class ExpenseControllerApi {
             return "Expense not found";
         }
     }
+
+
+    @PutMapping("/edit/{choreId}")
+    public Expense updateExpense(@PathVariable Long expenseId, @RequestParam Long id, @RequestBody Expense updatedExpense) {
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            Optional<Expense> optionalExpense = expenseRepository.findById(expenseId);
+
+            if (optionalExpense.isPresent()) {
+                Expense existingExpense = optionalExpense.get();
+                existingExpense.setDescription(updatedExpense.getDescription());
+                existingExpense.setDate(updatedExpense.getDate());
+                existingExpense.setAmount(updatedExpense.getAmount());
+                existingExpense.setCategory(updatedExpense.getCategory());
+                existingExpense.setUser(user);
+                return expenseRepository.save(existingExpense);
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+
+    @GetMapping("/list")
+    public Iterable<Expense> getExpenseForUser(@RequestParam Long id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            return expenseRepository.findByUser(user);
+        } else {
+
+            return Collections.emptyList();
+        }
+    }
+
+    @DeleteMapping("/{expenseId}")
+    public void deleteExpense(@PathVariable Long expenseId) {
+        expenseRepository.deleteById(expenseId);
+    }
+
+
 }
