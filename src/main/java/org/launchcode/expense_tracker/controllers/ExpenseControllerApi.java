@@ -58,7 +58,7 @@ public class ExpenseControllerApi {
     }
 
 
-    @PutMapping("/edit/{choreId}")
+    @PutMapping("/edit/{expenseId}")
     public Expense updateExpense(@PathVariable Long expenseId, @RequestParam Long id, @RequestBody Expense updatedExpense) {
         Optional<User> optionalUser = userRepository.findById(id);
 
