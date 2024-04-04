@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,14 +21,24 @@ public class ViewExpenseByDateController {
     private ExpenseRepository expenseRepository;
 
     @GetMapping("/yearly")
-    public ResponseEntity<Map<String, Double>> getYearlyExpenses(@RequestParam Long userId, @RequestParam String year) {
+    public ResponseEntity<List<Map<String, Object>>> getYearlyExpenses(@RequestParam Long userId, @RequestParam String year) {
         LocalDate startDate = LocalDate.parse(year + "-01-01");
         LocalDate endDate = LocalDate.parse(year + "-12-31");
         List<Expense> expenses = expenseRepository.findByUserIdAndDateBetween(userId, startDate, endDate);
         double totalExpense = expenses.stream().mapToDouble(Expense::getAmount).sum();
-        Map<String, Double> result = new HashMap<>();
-        result.put("totalExpense", totalExpense);
-        return ResponseEntity.ok(result);
+
+        // Create a list to hold the yearly expenses data
+        List<Map<String, Object>> yearlyExpensesData = new ArrayList<>();
+
+        // Create a map for the current year's data
+        Map<String, Object> yearlyExpenseData = new HashMap<>();
+        yearlyExpenseData.put("year", year);
+        yearlyExpenseData.put("totalExpense", totalExpense);
+
+        // Add the current year's data to the list
+        yearlyExpensesData.add(yearlyExpenseData);
+
+        return ResponseEntity.ok(yearlyExpensesData);
     }
 
     @GetMapping("/monthly")
