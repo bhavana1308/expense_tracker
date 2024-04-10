@@ -42,8 +42,13 @@ public class ViewExpenseByDateController {
     }
 
     @GetMapping("/monthly")
-    public ResponseEntity<Map<String, Double>> getMonthlyExpenses(@RequestParam Long userId, @RequestParam String year, @RequestParam String month) {
-        LocalDate startDate = LocalDate.parse(year + "-" + month + "-01");
+    public ResponseEntity<Map<String, Double>> getMonthlyExpenses(
+            @RequestParam Long userId,
+            @RequestParam String year,
+            @RequestParam int month) {
+
+        String formattedMonth = String.format("%02d", month); // Ensures month is always two digits
+        LocalDate startDate = LocalDate.parse(year + "-" + formattedMonth + "-01");
         LocalDate endDate = startDate.plusMonths(1).minusDays(1);
         List<Expense> expenses = expenseRepository.findByUserIdAndDateBetween(userId, startDate, endDate);
         double totalExpense = expenses.stream().mapToDouble(Expense::getAmount).sum();
