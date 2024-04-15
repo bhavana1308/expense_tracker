@@ -59,7 +59,8 @@ public class ViewExpenseByDateController {
 
     @GetMapping("/daily")
     public ResponseEntity<Map<String, Double>> getDailyExpenses(@RequestParam Long userId, @RequestParam String year, @RequestParam String month, @RequestParam String day) {
-        LocalDate date = LocalDate.parse(year + "-" + month + "-" + day);
+        String dateString = String.format("%s-%02d-%02d", year, Integer.parseInt(month), Integer.parseInt(day));
+        LocalDate date = LocalDate.parse(dateString);
         List<Expense> expenses = expenseRepository.findByUserIdAndDate(userId, date);
         double totalExpense = expenses.stream().mapToDouble(Expense::getAmount).sum();
         Map<String, Double> result = new HashMap<>();
