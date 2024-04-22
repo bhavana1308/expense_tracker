@@ -3,6 +3,7 @@ package org.launchcode.expense_tracker.controllers;
 import org.launchcode.expense_tracker.models.Expense;
 import org.launchcode.expense_tracker.repository.ExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,13 +59,39 @@ public class ViewExpenseByDateController {
     }
 
     @GetMapping("/daily")
-    public ResponseEntity<Map<String, Double>> getDailyExpenses(@RequestParam Long userId, @RequestParam String year, @RequestParam String month, @RequestParam String day) {
-        String dateString = String.format("%s-%02d-%02d", year, Integer.parseInt(month), Integer.parseInt(day));
-        LocalDate date = LocalDate.parse(dateString);
-        List<Expense> expenses = expenseRepository.findByUserIdAndDate(userId, date);
-        double totalExpense = expenses.stream().mapToDouble(Expense::getAmount).sum();
-        Map<String, Double> result = new HashMap<>();
-        result.put("totalExpense", totalExpense);
-        return ResponseEntity.ok(result);
+    public ResponseEntity<Map<String, Double>> getDailyExpenses(
+            @RequestParam Long userId,
+            @RequestParam String year,
+            @RequestParam String month,
+            @RequestParam String day) {
+        try {
+            String dateString = String.format("%s-%02d-%02d", year, Integer.parseInt(month), Integer.parseInt(day));
+            LocalDate date = LocalDate.parse(dateString);
+            List<Expense> expenses = expenseRepository.findByUserIdAndDate(userId, date);
+            double totalExpense = expenses.stream().mapToDouble(Expense::getAmount).sum();
+            Map<String, Double> result = new HashMap<>();
+            result.put("totalExpense", totalExpense);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @GetMapping("/for-date")
+    public ResponseEntity<List<Expense>> getExpensesForDate(
+            @RequestParam Long userId,
+            @RequestParam String year,
+            @RequestParam String month,
+            @RequestParam String day) {
+        try {
+            String dateString = String.format("%s-%02d-%02d", year, Integer.parseInt(month), Integer.parseInt(day));
+            LocalDate date = LocalDate.parse(dateString);
+            List<Expense> expenses = expenseRepository.findByUserIdAndDate(userId, date);
+            return ResponseEntity.ok(expenses);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 }
