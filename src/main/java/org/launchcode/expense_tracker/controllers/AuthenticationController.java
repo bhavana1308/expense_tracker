@@ -1,6 +1,5 @@
 package org.launchcode.expense_tracker.controllers;
 
-
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.launchcode.expense_tracker.configure.UserAuthProvider;
