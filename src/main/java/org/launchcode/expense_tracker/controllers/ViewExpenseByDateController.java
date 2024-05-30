@@ -78,6 +78,7 @@ public class ViewExpenseByDateController {
         }
     }
 
+    
     @GetMapping("/for-date")
     public ResponseEntity<List<Expense>> getExpensesForDate(
             @RequestParam Long userId,
