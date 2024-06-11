@@ -24,7 +24,7 @@ public class EmailService {
         mailSender.send(message);
     }
 
-    // Method to send HTML emails
+
     public void sendHtmlEmail(String to, String subject, String htmlBody) {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
 
@@ -32,7 +32,7 @@ public class EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setTo(to);
             helper.setSubject(subject);
-            helper.setText(htmlBody, true); // true indicates HTML content
+            helper.setText(htmlBody, true);
 
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
