@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -39,6 +41,9 @@ public class User {
     @Column(nullable = false)
     @Size(min = 8, max = 100, message = "Password must be at least 8 characters long")
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    private List<Expense> expenses;
 
 }
 
