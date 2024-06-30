@@ -32,7 +32,6 @@ public class EmailService {
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(htmlBody, true);
-
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
             e.printStackTrace();
