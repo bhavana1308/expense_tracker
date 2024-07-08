@@ -24,6 +24,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (header != null) {
+
             String[] authElements = header.split(" ");
             //JWT MUST have the correct length and bearer token
             if (authElements.length == 2 && "Bearer".equals(authElements[0])) {
