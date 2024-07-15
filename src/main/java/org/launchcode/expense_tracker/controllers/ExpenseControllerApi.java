@@ -39,6 +39,7 @@ public class ExpenseControllerApi {
             emailService.sendSimpleEmail(user.getEmail(), subject, text);
 
             return savedExpense;
+
         } else {
 
             throw new RuntimeException("User not found");
